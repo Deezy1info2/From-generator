@@ -1,26 +1,225 @@
-[
-  {
-    "competition": "ENGLISH PREMIER LEAGUE",
-    "homeTeam": "Real Madrid",
-    "awayTeam": "Manchester City",
-    "homeLogo": "https://crests.football-data.org/86.png",
-    "awayLogo": "https://crests.football-data.org/65.png",
-    "date": "2026-06-27",
-    "startTime": "21:00",
-    "endTime": "22:45",
-    "duration": "105'",
-    "status": "NOT STARTED",
-    "startDateTime": "2026-06-27T21:00:00.000Z",
-    "endDateTime": "2026-06-27T22:45:00.000Z",
-    "servers": [
-      {
-        "name": "Server 1",
-        "url": "https://example.com/stream1.m3u8"
-      },
-      {
-        "name": "Server 2",
-        "url": "https://example.com/stream2.mp4"
-      }
-    ]
-  }
-]
+<!-- Auto-generated Multi Match Cards with Video Player -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Cards with Player</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@0.14.17/dist/hls.min.js"></script>
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+    <style>
+        .match-card { transition: filter 0.3s; width: 100%; max-width: 400px; margin-left: auto; margin-right: auto; }
+        .match-card.ended { filter: grayscale(0.5); opacity: 0.8; }
+        @media (max-width: 480px) { .match-card { padding: 15px; } }
+        /* Player modal styles */
+        #playerModal { position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.85); backdrop-filter:blur(4px); transition: opacity 0.3s; opacity:0; pointer-events:none; }
+        #playerModal.active { opacity:1; pointer-events:auto; }
+        #playerModal .modal-box { width:100%; max-width:900px; margin:20px; background:#111827; border-radius:16px; overflow:hidden; border:1px solid #374151; box-shadow:0 25px 60px rgba(0,0,0,0.7); }
+        #playerModal .modal-header { display:flex; align-items:center; justify-content:space-between; padding:12px 20px; background:#1f2937; border-bottom:1px solid #374151; }
+        #playerModal .modal-header .title { display:flex; align-items:center; gap:10px; color:white; font-weight:bold; font-size:14px; }
+        #playerModal .modal-header .title i { color:#f97316; }
+        #playerModal .modal-header .close { background:none; border:none; color:#9ca3af; font-size:24px; cursor:pointer; padding:0 8px; transition:color 0.2s; }
+        #playerModal .modal-header .close:hover { color:white; }
+        #playerModal .video-wrap { position:relative; background:black; min-height:300px; }
+        #playerModal .video-wrap video { width:100%; max-height:70vh; display:block; }
+        #playerModal .loading, #playerModal .error { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:white; font-size:14px; background:rgba(0,0,0,0.7); }
+        #playerModal .error { color:#f87171; display:none; }
+        #playerModal .modal-footer { padding:8px 20px; background:#1f2937; border-top:1px solid #374151; display:flex; justify-content:space-between; font-size:12px; color:#9ca3af; }
+    </style>
+</head>
+<body style="background:#0f172a; padding:20px; margin:0;">
+
+<div style="display:flex; flex-direction:column; align-items:center; gap:20px; padding:10px;">
+
+<!-- Match Card 1 -->
+<div class="match-card" id="matchCard0" data-start="2026-06-27T21:00:00.000Z" data-end="2026-06-27T22:45:00.000Z" style="width:100%;max-width:400px;background:linear-gradient(135deg,#0f172a 0%,#111827 100%);border:1px solid #1f2937;border-radius:14px;padding:20px;box-shadow:0 12px 30px -8px rgba(0,0,0,0.4);font-family:system-ui,-apple-system,sans-serif;box-sizing:border-box;position:relative;overflow:hidden;margin:0 auto 20px auto;cursor:default;user-select:none;">
+    <div class="match-glow" style="position:absolute;inset:0;border-radius:14px;pointer-events:none;transition:opacity 0.6s;opacity:0;box-shadow:inset 0 0 60px rgba(239,68,68,0.12),0 0 35px rgba(239,68,68,0.06);"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;position:relative;z-index:10;">
+        <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#9ca3af;">UEFA Champions League</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:20px 0;position:relative;z-index:10;">
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;text-align:center;">
+            <img src="https://crests.football-data.org/86.png" style="width:56px;height:56px;object-fit:contain;margin-bottom:4px;" onerror="this.src='https://via.placeholder.com/64?text=H'">
+            <span style="font-size:13px;font-weight:700;color:#fff;">Real Madrid</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;padding:0 12px;">
+            <span style="font-size:12px;color:#6b7280;font-weight:700;letter-spacing:0.1em;">VS</span>
+            <div style="height:1px;width:24px;background-color:#374151;margin:4px 0;"></div>
+            <span class="status-badge" style="font-size:10px;font-weight:800;text-transform:uppercase;margin-top:4px;padding:2px 6px;border-radius:4px;letter-spacing:0.05em;background-color:rgba(37,99,235,0.8);color:#fff;">NOT STARTED</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;text-align:center;">
+            <img src="https://crests.football-data.org/65.png" style="width:56px;height:56px;object-fit:contain;margin-bottom:4px;" onerror="this.src='https://via.placeholder.com/64?text=A'">
+            <span style="font-size:13px;font-weight:700;color:#fff;">Manchester City</span>
+        </div>
+    </div>
+    <div style="text-align:center;font-size:11px;color:#9ca3af;background-color:rgba(3,7,18,0.5);border:1px solid rgba(31,41,55,0.6);padding:6px;border-radius:8px;margin-bottom:12px;">
+        📅 2026-06-27
+    </div>
+    <div class="servers-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;max-height:120px;overflow-y:auto;">
+        <a href="#" class="stream-link" data-url="https://example.com/stream1.m3u8" data-name="Server 1" data-match="Real Madrid vs Manchester City" data-live="false"
+                                   style="display:block;text-align:center;background-color:rgba(55,65,81,0.5);color:#6b7280;border:1px solid rgba(75,85,99,0.3);text-decoration:none;font-size:11px;font-weight:600;padding:7px 4px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:not-allowed;opacity:0.6;"
+                                   onclick="event.preventDefault(); if (this.dataset.live === 'true') { openPlayer(this.dataset.url, this.dataset.name, this.dataset.match); }"
+                                >▶ Server 1</a><a href="#" class="stream-link" data-url="https://example.com/stream2.mp4" data-name="Server 2" data-match="Real Madrid vs Manchester City" data-live="false"
+                                   style="display:block;text-align:center;background-color:rgba(55,65,81,0.5);color:#6b7280;border:1px solid rgba(75,85,99,0.3);text-decoration:none;font-size:11px;font-weight:600;padding:7px 4px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:not-allowed;opacity:0.6;"
+                                   onclick="event.preventDefault(); if (this.dataset.live === 'true') { openPlayer(this.dataset.url, this.dataset.name, this.dataset.match); }"
+                                >▶ Server 2</a>
+    </div>
+</div>
+</div>
+
+<!-- PLAYER MODAL -->
+<div id="playerModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div class="title"><i class="fas fa-play-circle"></i> <span id="playerTitle">Now Playing</span></div>
+            <button class="close" id="closePlayerBtn">&times;</button>
+        </div>
+        <div class="video-wrap">
+            <video id="videoPlayer" controls playsinline></video>
+            <div class="loading" id="playerLoading"><i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i> Loading stream...</div>
+            <div class="error" id="playerError"><i class="fas fa-exclamation-triangle" style="margin-right:8px;"></i> <span id="playerErrorMsg">Failed to load</span></div>
+        </div>
+        <div class="modal-footer">
+            <span id="playerStreamName">Stream</span>
+            <span id="playerMatchInfo">Match</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ----- Player logic -----
+    let hlsInstance = null, dashInstance = null;
+    const video = document.getElementById('videoPlayer');
+    const modal = document.getElementById('playerModal');
+    const closeBtn = document.getElementById('closePlayerBtn');
+    const playerTitle = document.getElementById('playerTitle');
+    const playerLoading = document.getElementById('playerLoading');
+    const playerError = document.getElementById('playerError');
+    const playerErrorMsg = document.getElementById('playerErrorMsg');
+    const playerStreamName = document.getElementById('playerStreamName');
+    const playerMatchInfo = document.getElementById('playerMatchInfo');
+
+    function destroyPlayer() {
+        if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
+        if (dashInstance) { dashInstance.destroy(); dashInstance = null; }
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+        playerLoading.style.display = 'flex';
+        playerError.style.display = 'none';
+    }
+
+    function showError(msg) {
+        playerLoading.style.display = 'none';
+        playerError.style.display = 'flex';
+        playerErrorMsg.textContent = msg || 'Failed to load stream';
+    }
+
+    function openPlayer(url, name, match) {
+        destroyPlayer();
+        playerTitle.textContent = name || 'Stream';
+        playerStreamName.textContent = name || 'Stream';
+        playerMatchInfo.textContent = match || '';
+        playerError.style.display = 'none';
+        playerLoading.style.display = 'flex';
+
+        const isHLS = url.includes('.m3u8') || url.includes('hls') || url.includes('m3u8');
+        const isDASH = url.includes('.mpd') || url.includes('dash');
+
+        if (isHLS && typeof Hls !== 'undefined' && Hls.isSupported()) {
+            hlsInstance = new Hls({ enableWorker: true, lowLatencyMode: true });
+            hlsInstance.loadSource(url);
+            hlsInstance.attachMedia(video);
+            hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
+                playerLoading.style.display = 'none';
+                video.play().catch(() => {});
+            });
+            hlsInstance.on(Hls.Events.ERROR, (e, data) => {
+                if (data.fatal) showError('HLS error');
+            });
+        } else if (isDASH && typeof dashjs !== 'undefined' && dashjs.MediaPlayer.isSupported()) {
+            dashInstance = dashjs.MediaPlayer().create();
+            dashInstance.initialize(video, url, true);
+            dashInstance.on('loaded', () => {
+                playerLoading.style.display = 'none';
+                video.play().catch(() => {});
+            });
+            dashInstance.on('error', (e) => showError('DASH error'));
+        } else {
+            video.src = url;
+            video.addEventListener('loadedmetadata', () => {
+                playerLoading.style.display = 'none';
+                video.play().catch(() => {});
+            });
+            video.addEventListener('error', () => showError('Failed to load stream'));
+            setTimeout(() => {
+                if (playerLoading.style.display !== 'none') showError('Timeout');
+            }, 8000);
+        }
+
+        modal.classList.add('active');
+    }
+
+    function closePlayer() {
+        modal.classList.remove('active');
+        setTimeout(destroyPlayer, 300);
+    }
+
+    closeBtn.addEventListener('click', closePlayer);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closePlayer(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePlayer(); });
+
+    // Expose openPlayer globally
+    window.openPlayer = openPlayer;
+
+    // ----- Auto-status update -----
+    (function(){
+        const cards = document.querySelectorAll('.match-card');
+        function updateCard(card) {
+            const start = card.getAttribute('data-start');
+            const end = card.getAttribute('data-end');
+            if (!start || !end) return;
+            const now = new Date();
+            const s = new Date(start), e = new Date(end);
+            let status;
+            if (now < s) status = 'NOT STARTED';
+            else if (now >= s && now < e) status = 'LIVE';
+            else status = 'MATCH ENDED';
+
+            const glow = card.querySelector('.match-glow');
+            const badge = card.querySelector('.status-badge');
+            const links = card.querySelectorAll('.stream-link');
+
+            if (glow) glow.style.opacity = status === 'LIVE' ? '1' : '0';
+            if (badge) {
+                badge.textContent = status;
+                badge.style.cssText = status === 'LIVE' 
+                    ? 'background-color:rgba(220,38,38,0.8);color:#fff;' 
+                    : (status === 'NOT STARTED' ? 'background-color:rgba(37,99,235,0.8);color:#fff;' : 'background-color:rgba(75,85,99,0.8);color:#d1d5db;');
+            }
+            if (status === 'MATCH ENDED') card.classList.add('ended');
+            else card.classList.remove('ended');
+
+            const isLive = status === 'LIVE';
+            links.forEach(link => {
+                link.dataset.live = isLive;
+                link.style.backgroundColor = isLive ? 'rgba(234,88,12,0.15)' : 'rgba(55,65,81,0.5)';
+                link.style.color = isLive ? '#fb923c' : '#6b7280';
+                link.style.borderColor = isLive ? 'rgba(249,115,22,0.3)' : 'rgba(75,85,99,0.3)';
+                link.style.cursor = isLive ? 'pointer' : 'not-allowed';
+                link.style.opacity = isLive ? '1' : '0.6';
+                link.onclick = function(e) {
+                    e.preventDefault();
+                    if (this.dataset.live === 'true') {
+                        openPlayer(this.dataset.url, this.dataset.name, this.dataset.match);
+                    }
+                };
+            });
+        }
+        function updateAll() { cards.forEach(c => updateCard(c)); }
+        updateAll();
+        setInterval(updateAll, 1000);
+    })();
+</script>
+</body>
+</html>

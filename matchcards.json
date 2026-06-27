@@ -1,98 +1,80 @@
-[
-  {
-    "competition": "UEFA Champions League",
-    "homeTeam": "Real Madrid",
-    "awayTeam": "Manchester City",
-    "homeLogo": "https://crests.football-data.org/86.png",
-    "awayLogo": "https://crests.football-data.org/65.png",
-    "date": "2026-06-27",
-    "startTime": "21:00",
-    "endTime": "22:45",
-    "duration": "105'",
-    "status": "NOT STARTED",
-    "startDateTime": "2026-06-27T21:00:00.000Z",
-    "endDateTime": "2026-06-27T22:45:00.000Z",
-    "servers": [
-      {
-        "name": "Server 1",
-        "url": "https://example.com/stream1.m3u8"
-      },
-      {
-        "name": "Server 2",
-        "url": "https://example.com/stream2.mp4"
-      }
-    ]
-  },
-  {
-    "competition": "Competition Name",
-    "homeTeam": "Home Team",
-    "awayTeam": "Away Team",
-    "homeLogo": "https://crests.football-data.org/86.png",
-    "awayLogo": "https://crests.football-data.org/86.png",
-    "date": "2026-06-27",
-    "startTime": "21:00",
-    "endTime": "23:00",
-    "duration": "120'",
-    "status": "NOT STARTED",
-    "startDateTime": "2026-06-27T21:00:00.000Z",
-    "endDateTime": "2026-06-27T23:00:00.000Z",
-    "servers": [
-      {
-        "name": "Server 1",
-        "url": "https://example.com/stream1.m3u8"
-      },
-      {
-        "name": "Server 2",
-        "url": "https://example.com/stream2.mp4"
-      }
-    ]
-  },
-  {
-    "competition": "Competition Name",
-    "homeTeam": "Home Team",
-    "awayTeam": "Away Team",
-    "homeLogo": "https://crests.football-data.org/86.png",
-    "awayLogo": "https://crests.football-data.org/86.png",
-    "date": "2026-06-27",
-    "startTime": "21:00",
-    "endTime": "23:00",
-    "duration": "120'",
-    "status": "NOT STARTED",
-    "startDateTime": "2026-06-27T21:00:00.000Z",
-    "endDateTime": "2026-06-27T23:00:00.000Z",
-    "servers": [
-      {
-        "name": "Server 1",
-        "url": "https://example.com/stream1.m3u8"
-      },
-      {
-        "name": "Server 2",
-        "url": "https://example.com/stream2.mp4"
-      }
-    ]
-  },
-  {
-    "competition": "Competition Name",
-    "homeTeam": "Home Team",
-    "awayTeam": "Away Team",
-    "homeLogo": "https://crests.football-data.org/86.png",
-    "awayLogo": "https://crests.football-data.org/86.png",
-    "date": "2026-06-27",
-    "startTime": "21:00",
-    "endTime": "23:00",
-    "duration": "120'",
-    "status": "NOT STARTED",
-    "startDateTime": "2026-06-27T21:00:00.000Z",
-    "endDateTime": "2026-06-27T23:00:00.000Z",
-    "servers": [
-      {
-        "name": "Server 1",
-        "url": "https://example.com/stream1.m3u8"
-      },
-      {
-        "name": "Server 2",
-        "url": "https://example.com/stream2.mp4"
-      }
-    ]
-  }
-]
+{
+  "version": "2.0",
+  "last_updated": "2026-06-25",
+  "app_name": "Sports Info TV",
+  "by": "DEEZY1INFO 🇬🇭",
+  "matches": [
+    {
+      "id": "match1",
+      "title": "LALIGA",
+      "team1": { "name": "Togo", "flag": "https://images.fotmob.com/image_resources/logo/teamlogo/6595_small.png" },
+      "team2": { "name": "Benin", "flag": "https://images.fotmob.com/image_resources/logo/teamlogo/6713_small.png" },
+      "time": "08:30 AM",
+      "date": "2026-07-03",
+      "liveStartTime": "08:30:00",
+      "liveEndTime": "23:30:00",
+      "servers": [
+        { "name": "Ti_Sports_1", "url": "http://rjcf.ofztvxv.top:8080/live/PHGPnPHF4U5f/kE2u7ymN9xUn/1026.m3u8" },
+        { "name": "Ti_Sports_2", "url": "https://example.com/server2-1.m3u8" },
+        { "name": "Ti_Sports_3", "url": "https://example.com/server3-1.m3u8" }
+      ]
+    },
+    {
+      "id": "match2",
+      "title": "EPL",
+      "team1": { "name": "wolves", "flag": "https://i.imgur.com/QdpHxmR.jpeg" },
+      "team2": { "name": "Arsenal", "flag": "https://i.imgur.com/QdpHxmR.jpeg" },
+      "time": "12:00 AM",
+      "date": "2026-10-03",
+      "liveStartTime": "00:00:00",
+      "liveEndTime": "02:00:00",
+      "servers": [
+        { "name": "Server A", "url": "https://fdev.short.gy/IndVbanxRanapk.m3u8" },
+        { "name": "Server B", "url": "https://example.com/server2-2.m3u8" },
+        { "name": "Server C", "url": "https://example.com/server3-2.m3u8" }
+      ]
+    },
+    {
+      "id": "match3",
+      "title": "2 Tests | Bangladesh vs South Africa",
+      "team1": { "name": "BAN", "flag": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Flag_of_Bangladesh.svg" },
+      "team2": { "name": "SA", "flag": "https://upload.wikimedia.org/wikipedia/commons/a/af/Flag_of_South_Africa.svg" },
+      "time": "10:00 AM",
+      "date": "2026-10-21",
+      "liveStartTime": "10:00:00",
+      "liveEndTime": "17:00:00",
+      "servers": [
+        { "name": "Link 1", "url": "http://103.190.85.38/hls/tsports.m3u8" },
+        { "name": "Link 2", "url": "https://example.com/server2-3.m3u8" }
+      ]
+    },
+    {
+      "id": "match4",
+      "title": "2 Tests | Bangladesh vs West Indies",
+      "team1": { "name": "BAN", "flag": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Flag_of_Bangladesh.svg" },
+      "team2": { "name": "WI", "flag": "https://upload.wikimedia.org/wikipedia/commons/1/18/WestIndiesCricketFlagPre1999.svg" },
+      "time": "10:30 AM",
+      "date": "2026-10-21",
+      "liveStartTime": "10:30:00",
+      "liveEndTime": "17:30:00",
+      "servers": [
+        { "name": "Stream 1", "url": "https://cdn1.hotflix-bd.online/Star-Sports-2/tracks-v1a1/mono.m3u8" },
+        { "name": "Stream 2", "url": "https://example.com/server2-4.m3u8" }
+      ]
+    },
+    {
+      "id": "match5",
+      "title": "3 ODI | Bangladesh vs Afghanistan",
+      "team1": { "name": "BAN", "flag": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Flag_of_Bangladesh.svg" },
+      "team2": { "name": "AFG", "flag": "https://i.imgur.com/fLi6wMm.png" },
+      "time": "05:30 PM",
+      "date": "2026-11-06",
+      "liveStartTime": "17:30:00",
+      "liveEndTime": "23:00:00",
+      "servers": [
+        { "name": "AFG Feed", "url": "https://example.com/bangladesh-vs-pakistan-odi.m3u8" },
+        { "name": "Backup", "url": "https://example.com/server2-5.m3u8" }
+      ]
+    }
+  ]
+}

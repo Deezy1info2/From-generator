@@ -1,0 +1,98 @@
+[
+  {
+    "competition": "UEFA Champions League",
+    "homeTeam": "Real Madrid",
+    "awayTeam": "Manchester City",
+    "homeLogo": "https://crests.football-data.org/86.png",
+    "awayLogo": "https://crests.football-data.org/65.png",
+    "date": "2026-06-27",
+    "startTime": "21:00",
+    "endTime": "22:45",
+    "duration": "105'",
+    "status": "NOT STARTED",
+    "startDateTime": "2026-06-27T21:00:00.000Z",
+    "endDateTime": "2026-06-27T22:45:00.000Z",
+    "servers": [
+      {
+        "name": "Server 1",
+        "url": "https://example.com/stream1.m3u8"
+      },
+      {
+        "name": "Server 2",
+        "url": "https://example.com/stream2.mp4"
+      }
+    ]
+  },
+  {
+    "competition": "Competition Name",
+    "homeTeam": "Home Team",
+    "awayTeam": "Away Team",
+    "homeLogo": "https://crests.football-data.org/86.png",
+    "awayLogo": "https://crests.football-data.org/86.png",
+    "date": "2026-06-27",
+    "startTime": "21:00",
+    "endTime": "23:00",
+    "duration": "120'",
+    "status": "NOT STARTED",
+    "startDateTime": "2026-06-27T21:00:00.000Z",
+    "endDateTime": "2026-06-27T23:00:00.000Z",
+    "servers": [
+      {
+        "name": "Server 1",
+        "url": "https://example.com/stream1.m3u8"
+      },
+      {
+        "name": "Server 2",
+        "url": "https://example.com/stream2.mp4"
+      }
+    ]
+  },
+  {
+    "competition": "Competition Name",
+    "homeTeam": "Home Team",
+    "awayTeam": "Away Team",
+    "homeLogo": "https://crests.football-data.org/86.png",
+    "awayLogo": "https://crests.football-data.org/86.png",
+    "date": "2026-06-27",
+    "startTime": "21:00",
+    "endTime": "23:00",
+    "duration": "120'",
+    "status": "NOT STARTED",
+    "startDateTime": "2026-06-27T21:00:00.000Z",
+    "endDateTime": "2026-06-27T23:00:00.000Z",
+    "servers": [
+      {
+        "name": "Server 1",
+        "url": "https://example.com/stream1.m3u8"
+      },
+      {
+        "name": "Server 2",
+        "url": "https://example.com/stream2.mp4"
+      }
+    ]
+  },
+  {
+    "competition": "Competition Name",
+    "homeTeam": "Home Team",
+    "awayTeam": "Away Team",
+    "homeLogo": "https://crests.football-data.org/86.png",
+    "awayLogo": "https://crests.football-data.org/86.png",
+    "date": "2026-06-27",
+    "startTime": "21:00",
+    "endTime": "23:00",
+    "duration": "120'",
+    "status": "NOT STARTED",
+    "startDateTime": "2026-06-27T21:00:00.000Z",
+    "endDateTime": "2026-06-27T23:00:00.000Z",
+    "servers": [
+      {
+        "name": "Server 1",
+        "url": "https://example.com/stream1.m3u8"
+      },
+      {
+        "name": "Server 2",
+        "url": "https://example.com/stream2.mp4"
+      }
+    ]
+  }
+]

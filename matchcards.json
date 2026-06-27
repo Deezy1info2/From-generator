@@ -1,225 +1,492 @@
-<!-- Auto-generated Multi Match Cards with Video Player -->
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Match Cards with Player</title>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@0.14.17/dist/hls.min.js"></script>
-    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
-    <style>
-        .match-card { transition: filter 0.3s; width: 100%; max-width: 400px; margin-left: auto; margin-right: auto; }
-        .match-card.ended { filter: grayscale(0.5); opacity: 0.8; }
-        @media (max-width: 480px) { .match-card { padding: 15px; } }
-        /* Player modal styles */
-        #playerModal { position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.85); backdrop-filter:blur(4px); transition: opacity 0.3s; opacity:0; pointer-events:none; }
-        #playerModal.active { opacity:1; pointer-events:auto; }
-        #playerModal .modal-box { width:100%; max-width:900px; margin:20px; background:#111827; border-radius:16px; overflow:hidden; border:1px solid #374151; box-shadow:0 25px 60px rgba(0,0,0,0.7); }
-        #playerModal .modal-header { display:flex; align-items:center; justify-content:space-between; padding:12px 20px; background:#1f2937; border-bottom:1px solid #374151; }
-        #playerModal .modal-header .title { display:flex; align-items:center; gap:10px; color:white; font-weight:bold; font-size:14px; }
-        #playerModal .modal-header .title i { color:#f97316; }
-        #playerModal .modal-header .close { background:none; border:none; color:#9ca3af; font-size:24px; cursor:pointer; padding:0 8px; transition:color 0.2s; }
-        #playerModal .modal-header .close:hover { color:white; }
-        #playerModal .video-wrap { position:relative; background:black; min-height:300px; }
-        #playerModal .video-wrap video { width:100%; max-height:70vh; display:block; }
-        #playerModal .loading, #playerModal .error { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:white; font-size:14px; background:rgba(0,0,0,0.7); }
-        #playerModal .error { color:#f87171; display:none; }
-        #playerModal .modal-footer { padding:8px 20px; background:#1f2937; border-top:1px solid #374151; display:flex; justify-content:space-between; font-size:12px; color:#9ca3af; }
-    </style>
-</head>
-<body style="background:#0f172a; padding:20px; margin:0;">
+<style>
+    .deezy-card-view { display: block; width: 100%; max-width: 360px; margin: 20px auto; text-decoration: none; color: #fff; border-radius: 12px; background: #1e293b; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.5); font-family: sans-serif; text-align: center; cursor: pointer; border: 1px solid #334155; }
+    .deezy-stream-page { display: none; width: 100%; background: #0b0b0b; font-family: sans-serif; color: #fff; position: absolute; top: 0; left: 0; min-height: 100vh; z-index: 99999; padding-bottom: 40px; }
+    .deezy-player-layer { width: 100%; margin-bottom: 0; background: #000; }
+    .deezy-video-frame { position: relative; width: 100%; height: 410px !important; background: #000; }
+    .deezy-video-frame iframe { width: 100%; height: 100% !important; border: none; }
+    .deezy-server-divider { display: flex; align-items: center; margin: 0; }
+    .deezy-server-divider .div-line { flex: 1; height: 3px; }
+    .deezy-server-divider .div-label { padding: 10px 20px; font-size: 0.78rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+    .deezy-server-divider.en .div-line { background: linear-gradient(90deg, transparent, #ef4444, transparent); }
+    .deezy-server-divider.en .div-label { color: #ef4444; background: #0f0f0f; }
+    .deezy-server-divider.ar .div-line { background: linear-gradient(90deg, transparent, #eab308, transparent); }
+    .deezy-server-divider.ar .div-label { color: #eab308; background: #0f0f0f; }
+    .deezy-server-divider.es .div-line { background: linear-gradient(90deg, transparent, #60a5fa, transparent); }
+    .deezy-server-divider.es .div-label { color: #60a5fa; background: #0f0f0f; }
+    .deezy-srv-head { padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a1a1a; }
+    .deezy-srv-head .srv-info { display: flex; align-items: center; gap: 10px; }
+    .deezy-srv-head .srv-badge { width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 800; }
+    .deezy-srv-head .srv-name { font-size: 0.88rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #cbd5e1; }
+    .deezy-srv-head .srv-sub { font-size: 0.7rem; color: #4a5568; margin-top: 1px; }
+    .deezy-srv-head .fs-btn { background: transparent; padding: 6px 14px; border-radius: 5px; font-size: 0.72rem; font-weight: 800; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; transition: background 0.2s; }
+    .s-en .deezy-srv-head { background: #111; }
+    .s-en .srv-badge { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.35); }
+    .s-en .fs-btn { color: #ef4444; border: 1px solid rgba(239,68,68,0.4); }
+    .s-ar .deezy-srv-head { background: #111; }
+    .s-ar .srv-badge { background: rgba(234,179,8,0.12); color: #eab308; border: 1px solid rgba(234,179,8,0.35); }
+    .s-ar .fs-btn { color: #eab308; border: 1px solid rgba(234,179,8,0.4); }
+    .s-es .deezy-srv-head { background: #111; }
+    .s-es .srv-badge { background: rgba(96,165,250,0.12); color: #60a5fa; border: 1px solid rgba(96,165,250,0.35); }
+    .s-es .fs-btn { color: #60a5fa; border: 1px solid rgba(96,165,250,0.4); }
+</style>
 
-<div style="display:flex; flex-direction:column; align-items:center; gap:20px; padding:10px;">
-
-<!-- Match Card 1 -->
-<div class="match-card" id="matchCard0" data-start="2026-06-27T21:00:00.000Z" data-end="2026-06-27T22:45:00.000Z" style="width:100%;max-width:400px;background:linear-gradient(135deg,#0f172a 0%,#111827 100%);border:1px solid #1f2937;border-radius:14px;padding:20px;box-shadow:0 12px 30px -8px rgba(0,0,0,0.4);font-family:system-ui,-apple-system,sans-serif;box-sizing:border-box;position:relative;overflow:hidden;margin:0 auto 20px auto;cursor:default;user-select:none;">
-    <div class="match-glow" style="position:absolute;inset:0;border-radius:14px;pointer-events:none;transition:opacity 0.6s;opacity:0;box-shadow:inset 0 0 60px rgba(239,68,68,0.12),0 0 35px rgba(239,68,68,0.06);"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;position:relative;z-index:10;">
-        <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#9ca3af;">UEFA Champions League</span>
-    </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin:20px 0;position:relative;z-index:10;">
-        <div style="display:flex;flex-direction:column;align-items:center;flex:1;text-align:center;">
-            <img src="https://crests.football-data.org/86.png" style="width:56px;height:56px;object-fit:contain;margin-bottom:4px;" onerror="this.src='https://via.placeholder.com/64?text=H'">
-            <span style="font-size:13px;font-weight:700;color:#fff;">Real Madrid</span>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center;padding:0 12px;">
-            <span style="font-size:12px;color:#6b7280;font-weight:700;letter-spacing:0.1em;">VS</span>
-            <div style="height:1px;width:24px;background-color:#374151;margin:4px 0;"></div>
-            <span class="status-badge" style="font-size:10px;font-weight:800;text-transform:uppercase;margin-top:4px;padding:2px 6px;border-radius:4px;letter-spacing:0.05em;background-color:rgba(37,99,235,0.8);color:#fff;">NOT STARTED</span>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center;flex:1;text-align:center;">
-            <img src="https://crests.football-data.org/65.png" style="width:56px;height:56px;object-fit:contain;margin-bottom:4px;" onerror="this.src='https://via.placeholder.com/64?text=A'">
-            <span style="font-size:13px;font-weight:700;color:#fff;">Manchester City</span>
-        </div>
-    </div>
-    <div style="text-align:center;font-size:11px;color:#9ca3af;background-color:rgba(3,7,18,0.5);border:1px solid rgba(31,41,55,0.6);padding:6px;border-radius:8px;margin-bottom:12px;">
-        📅 2026-06-27
-    </div>
-    <div class="servers-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;max-height:120px;overflow-y:auto;">
-        <a href="#" class="stream-link" data-url="https://example.com/stream1.m3u8" data-name="Server 1" data-match="Real Madrid vs Manchester City" data-live="false"
-                                   style="display:block;text-align:center;background-color:rgba(55,65,81,0.5);color:#6b7280;border:1px solid rgba(75,85,99,0.3);text-decoration:none;font-size:11px;font-weight:600;padding:7px 4px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:not-allowed;opacity:0.6;"
-                                   onclick="event.preventDefault(); if (this.dataset.live === 'true') { openPlayer(this.dataset.url, this.dataset.name, this.dataset.match); }"
-                                >▶ Server 1</a><a href="#" class="stream-link" data-url="https://example.com/stream2.mp4" data-name="Server 2" data-match="Real Madrid vs Manchester City" data-live="false"
-                                   style="display:block;text-align:center;background-color:rgba(55,65,81,0.5);color:#6b7280;border:1px solid rgba(75,85,99,0.3);text-decoration:none;font-size:11px;font-weight:600;padding:7px 4px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:not-allowed;opacity:0.6;"
-                                   onclick="event.preventDefault(); if (this.dataset.live === 'true') { openPlayer(this.dataset.url, this.dataset.name, this.dataset.match); }"
-                                >▶ Server 2</a>
+<div id="deezyCardWidget" class="deezy-card-view" onclick="document.getElementById('deezyCardWidget').style.display='none'; document.getElementById('deezyStreamEngine').style.display='block'; window.scrollTo(0,0);">
+    <img src="https://cdn.ratingbet.com/ratingbet/20260602/3817232242a003b3304101b3c8b0fb1001a15451ec72a7fc8ebe22cc1d0f6a0f-550-345.webp" alt="Spain vs Iraq" style="width: 100%; height: auto; display: block;">
+    <div style="padding: 18px; background: #1e293b;">
+        <h3 style="margin: 0 0 12px 0; font-size: 1.3rem; font-weight: 700; color: #fff;">Spain vs Iraq</h3>
+        <span style="display: inline-block; background: #ef4444; color: white; padding: 6px 16px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; letter-spacing: 0.5px;">WATCH LIVE</span>
     </div>
 </div>
-</div>
 
-<!-- PLAYER MODAL -->
-<div id="playerModal">
-    <div class="modal-box">
-        <div class="modal-header">
-            <div class="title"><i class="fas fa-play-circle"></i> <span id="playerTitle">Now Playing</span></div>
-            <button class="close" id="closePlayerBtn">&times;</button>
+<div id="deezyStreamEngine" class="deezy-stream-page">
+    <div style="width: 100%; padding: 20px 15px; background: #161616; text-align: center; border-bottom: 1px solid #252525; display: flex; align-items: center; justify-content: center; position: relative;">
+        <button onclick="document.getElementById('deezyStreamEngine').style.display='none'; document.getElementById('deezyCardWidget').style.display='block';" style="position: absolute; left: 15px; background: #2d3748; color: white; border: none; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; text-transform: uppercase;">&#10005; Back</button>
+        <div>
+            <h1 style="font-size: 1.4rem; margin: 0; color: #fff; font-weight: bold;">Spain vs Iraq</h1>
+            <p style="color: #10b981; font-weight: 600; font-size: 0.85rem; margin: 3px 0 0 0;">&#127942; International Friendly &#127942;</p>
         </div>
-        <div class="video-wrap">
-            <video id="videoPlayer" controls playsinline></video>
-            <div class="loading" id="playerLoading"><i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i> Loading stream...</div>
-            <div class="error" id="playerError"><i class="fas fa-exclamation-triangle" style="margin-right:8px;"></i> <span id="playerErrorMsg">Failed to load</span></div>
+    </div>
+    <div style="color: #ef4444; font-weight: bold; margin: 20px 0; font-size: 1.1rem; text-align: center; letter-spacing: 1px;">&#128308; LIVE NOW &#128071;</div>
+
+    <div class="deezy-server-divider en">
+        <div class="div-line"></div>
+        <div class="div-label">&#127897;&#65039; English Commentary</div>
+        <div class="div-line"></div>
+    </div>
+    <div class="deezy-player-layer s-en">
+        <div class="deezy-srv-head">
+            <div class="srv-info">
+                <div class="srv-badge">EN</div>
+                <div><div class="srv-name">English Server</div><div class="srv-sub">HD &middot; Live Broadcast</div></div>
+            </div>
+            <button class="fs-btn" onclick="triggerLandscapeView('deezy-p1')">&#9974; Fullscreen</button>
         </div>
-        <div class="modal-footer">
-            <span id="playerStreamName">Stream</span>
-            <span id="playerMatchInfo">Match</span>
+        <div id="deezy-p1" class="deezy-video-frame">
+            <iframe src="https://eyj0exaioijkv1qilcjhbgcioijiuzi1nij99ds.praynoldikem.sbs/playerv5.php?match=4712159&key=c0ae1abba6eebd7e6cc5b88b1d2B71547" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allowfullscreen scrolling="no"></iframe>
+        </div>
+    </div>
+
+    <div class="deezy-server-divider ar">
+        <div class="div-line"></div>
+        <div class="div-label">&#127897;&#65039; Arabic Commentary</div>
+        <div class="div-line"></div>
+    </div>
+    <div class="deezy-player-layer s-ar">
+        <div class="deezy-srv-head">
+            <div class="srv-info">
+                <div class="srv-badge">AR</div>
+                <div><div class="srv-name">Arabic Server</div><div class="srv-sub">HD &middot; Live Broadcast</div></div>
+            </div>
+            <button class="fs-btn" onclick="triggerLandscapeView('deezy-p2')">&#9974; Fullscreen</button>
+        </div>
+        <div id="deezy-p2" class="deezy-video-frame">
+            <iframe src="https://eyj0exaioijkv1qilcjhbgcioijiuzi1nij99ds.praynoldikem.sbs/playerv5.php?match=4712159&key=c0ae1abba6eebd7e6cc5b88b1d2B71547" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allowfullscreen scrolling="no"></iframe>
+        </div>
+    </div>
+
+    <div class="deezy-server-divider es">
+        <div class="div-line"></div>
+        <div class="div-label">&#127897;&#65039; Spanish Commentary</div>
+        <div class="div-line"></div>
+    </div>
+    <div class="deezy-player-layer s-es">
+        <div class="deezy-srv-head">
+            <div class="srv-info">
+                <div class="srv-badge">ES</div>
+                <div><div class="srv-name">Spanish Server</div><div class="srv-sub">HD &middot; Live Broadcast</div></div>
+            </div>
+            <button class="fs-btn" onclick="triggerLandscapeView('deezy-p3')">&#9974; Fullscreen</button>
+        </div>
+        <div id="deezy-p3" class="deezy-video-frame">
+            <iframe src="https://eyj0exaioijkv1qilcjhbgcioijiuzi1nij99ds.praynoldikem.sbs/playerv5.php?match=4712159&key=c0ae1abba6eebd7e6cc5b88b1d2B71547" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allowfullscreen scrolling="no"></iframe>
         </div>
     </div>
 </div>
 
 <script>
-    // ----- Player logic -----
-    let hlsInstance = null, dashInstance = null;
-    const video = document.getElementById('videoPlayer');
-    const modal = document.getElementById('playerModal');
-    const closeBtn = document.getElementById('closePlayerBtn');
-    const playerTitle = document.getElementById('playerTitle');
-    const playerLoading = document.getElementById('playerLoading');
-    const playerError = document.getElementById('playerError');
-    const playerErrorMsg = document.getElementById('playerErrorMsg');
-    const playerStreamName = document.getElementById('playerStreamName');
-    const playerMatchInfo = document.getElementById('playerMatchInfo');
-
-    function destroyPlayer() {
-        if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
-        if (dashInstance) { dashInstance.destroy(); dashInstance = null; }
-        video.pause();
-        video.removeAttribute('src');
-        video.load();
-        playerLoading.style.display = 'flex';
-        playerError.style.display = 'none';
+function triggerLandscapeView(id) {
+    var el = document.getElementById(id);
+    if (el.requestFullscreen) { el.requestFullscreen().then(() => { lockScreen(); }); }
+    else if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen().then(() => { lockScreen(); }); }
+    else if (el.mozRequestFullScreen) { el.mozRequestFullScreen().then(() => { lockScreen(); }); }
+}
+function lockScreen() {
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(e => console.log(e));
     }
-
-    function showError(msg) {
-        playerLoading.style.display = 'none';
-        playerError.style.display = 'flex';
-        playerErrorMsg.textContent = msg || 'Failed to load stream';
-    }
-
-    function openPlayer(url, name, match) {
-        destroyPlayer();
-        playerTitle.textContent = name || 'Stream';
-        playerStreamName.textContent = name || 'Stream';
-        playerMatchInfo.textContent = match || '';
-        playerError.style.display = 'none';
-        playerLoading.style.display = 'flex';
-
-        const isHLS = url.includes('.m3u8') || url.includes('hls') || url.includes('m3u8');
-        const isDASH = url.includes('.mpd') || url.includes('dash');
-
-        if (isHLS && typeof Hls !== 'undefined' && Hls.isSupported()) {
-            hlsInstance = new Hls({ enableWorker: true, lowLatencyMode: true });
-            hlsInstance.loadSource(url);
-            hlsInstance.attachMedia(video);
-            hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
-                playerLoading.style.display = 'none';
-                video.play().catch(() => {});
-            });
-            hlsInstance.on(Hls.Events.ERROR, (e, data) => {
-                if (data.fatal) showError('HLS error');
-            });
-        } else if (isDASH && typeof dashjs !== 'undefined' && dashjs.MediaPlayer.isSupported()) {
-            dashInstance = dashjs.MediaPlayer().create();
-            dashInstance.initialize(video, url, true);
-            dashInstance.on('loaded', () => {
-                playerLoading.style.display = 'none';
-                video.play().catch(() => {});
-            });
-            dashInstance.on('error', (e) => showError('DASH error'));
-        } else {
-            video.src = url;
-            video.addEventListener('loadedmetadata', () => {
-                playerLoading.style.display = 'none';
-                video.play().catch(() => {});
-            });
-            video.addEventListener('error', () => showError('Failed to load stream'));
-            setTimeout(() => {
-                if (playerLoading.style.display !== 'none') showError('Timeout');
-            }, 8000);
-        }
-
-        modal.classList.add('active');
-    }
-
-    function closePlayer() {
-        modal.classList.remove('active');
-        setTimeout(destroyPlayer, 300);
-    }
-
-    closeBtn.addEventListener('click', closePlayer);
-    modal.addEventListener('click', (e) => { if (e.target === modal) closePlayer(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePlayer(); });
-
-    // Expose openPlayer globally
-    window.openPlayer = openPlayer;
-
-    // ----- Auto-status update -----
-    (function(){
-        const cards = document.querySelectorAll('.match-card');
-        function updateCard(card) {
-            const start = card.getAttribute('data-start');
-            const end = card.getAttribute('data-end');
-            if (!start || !end) return;
-            const now = new Date();
-            const s = new Date(start), e = new Date(end);
-            let status;
-            if (now < s) status = 'NOT STARTED';
-            else if (now >= s && now < e) status = 'LIVE';
-            else status = 'MATCH ENDED';
-
-            const glow = card.querySelector('.match-glow');
-            const badge = card.querySelector('.status-badge');
-            const links = card.querySelectorAll('.stream-link');
-
-            if (glow) glow.style.opacity = status === 'LIVE' ? '1' : '0';
-            if (badge) {
-                badge.textContent = status;
-                badge.style.cssText = status === 'LIVE' 
-                    ? 'background-color:rgba(220,38,38,0.8);color:#fff;' 
-                    : (status === 'NOT STARTED' ? 'background-color:rgba(37,99,235,0.8);color:#fff;' : 'background-color:rgba(75,85,99,0.8);color:#d1d5db;');
-            }
-            if (status === 'MATCH ENDED') card.classList.add('ended');
-            else card.classList.remove('ended');
-
-            const isLive = status === 'LIVE';
-            links.forEach(link => {
-                link.dataset.live = isLive;
-                link.style.backgroundColor = isLive ? 'rgba(234,88,12,0.15)' : 'rgba(55,65,81,0.5)';
-                link.style.color = isLive ? '#fb923c' : '#6b7280';
-                link.style.borderColor = isLive ? 'rgba(249,115,22,0.3)' : 'rgba(75,85,99,0.3)';
-                link.style.cursor = isLive ? 'pointer' : 'not-allowed';
-                link.style.opacity = isLive ? '1' : '0.6';
-                link.onclick = function(e) {
-                    e.preventDefault();
-                    if (this.dataset.live === 'true') {
-                        openPlayer(this.dataset.url, this.dataset.name, this.dataset.match);
-                    }
-                };
-            });
-        }
-        function updateAll() { cards.forEach(c => updateCard(c)); }
-        updateAll();
-        setInterval(updateAll, 1000);
-    })();
+}
 </script>
-</body>
-</html>
+
+
+
+
+<style>
+    .deezy-card-view { display: block; width: 100%; max-width: 360px; margin: 20px auto; text-decoration: none; color: #fff; border-radius: 12px; background: #1e293b; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.5); font-family: sans-serif; text-align: center; cursor: pointer; border: 1px solid #334155; }
+    .deezy-stream-page { display: none; width: 100%; background: #0b0b0b; font-family: sans-serif; color: #fff; position: absolute; top: 0; left: 0; min-height: 100vh; z-index: 99999; padding-bottom: 40px; }
+    .deezy-player-layer { width: 100%; margin-bottom: 0; background: #000; }
+    .deezy-video-frame { position: relative; width: 100%; height: 410px !important; background: #000; }
+    .deezy-video-frame iframe { width: 100%; height: 100% !important; border: none; }
+    .deezy-server-divider { display: flex; align-items: center; margin: 0; }
+    .deezy-server-divider .div-line { flex: 1; height: 3px; }
+    .deezy-server-divider .div-label { padding: 10px 20px; font-size: 0.78rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+    .deezy-server-divider.en .div-line { background: linear-gradient(90deg, transparent, #ef4444, transparent); }
+    .deezy-server-divider.en .div-label { color: #ef4444; background: #0f0f0f; }
+    .deezy-server-divider.ar .div-line { background: linear-gradient(90deg, transparent, #eab308, transparent); }
+    .deezy-server-divider.ar .div-label { color: #eab308; background: #0f0f0f; }
+    .deezy-server-divider.es .div-line { background: linear-gradient(90deg, transparent, #60a5fa, transparent); }
+    .deezy-server-divider.es .div-label { color: #60a5fa; background: #0f0f0f; }
+    .deezy-srv-head { padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a1a1a; }
+    .deezy-srv-head .srv-info { display: flex; align-items: center; gap: 10px; }
+    .deezy-srv-head .srv-badge { width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 800; }
+    .deezy-srv-head .srv-name { font-size: 0.88rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #cbd5e1; }
+    .deezy-srv-head .srv-sub { font-size: 0.7rem; color: #4a5568; margin-top: 1px; }
+    .deezy-srv-head .fs-btn { background: transparent; padding: 6px 14px; border-radius: 5px; font-size: 0.72rem; font-weight: 800; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; transition: background 0.2s; }
+    .s-en .deezy-srv-head { background: #111; }
+    .s-en .srv-badge { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.35); }
+    .s-en .fs-btn { color: #ef4444; border: 1px solid rgba(239,68,68,0.4); }
+    .s-ar .deezy-srv-head { background: #111; }
+    .s-ar .srv-badge { background: rgba(234,179,8,0.12); color: #eab308; border: 1px solid rgba(234,179,8,0.35); }
+    .s-ar .fs-btn { color: #eab308; border: 1px solid rgba(234,179,8,0.4); }
+    .s-es .deezy-srv-head { background: #111; }
+    .s-es .srv-badge { background: rgba(96,165,250,0.12); color: #60a5fa; border: 1px solid rgba(96,165,250,0.35); }
+    .s-es .fs-btn { color: #60a5fa; border: 1px solid rgba(96,165,250,0.4); }
+</style>
+
+<div id="deezyCardWidget" class="deezy-card-view" onclick="document.getElementById('deezyCardWidget').style.display='none'; document.getElementById('deezyStreamEngine').style.display='block'; window.scrollTo(0,0);">
+    <img src="https://cdn.ratingbet.com/ratingbet/20260602/3817232242a003b3304101b3c8b0fb1001a15451ec72a7fc8ebe22cc1d0f6a0f-550-345.webp" alt="Spain vs Iraq" style="width: 100%; height: auto; display: block;">
+    <div style="padding: 18px; background: #1e293b;">
+        <h3 style="margin: 0 0 12px 0; font-size: 1.3rem; font-weight: 700; color: #fff;">Spain vs Iraq</h3>
+        <span style="display: inline-block; background: #ef4444; color: white; padding: 6px 16px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; letter-spacing: 0.5px;">WATCH LIVE</span>
+    </div>
+</div>
+
+<div id="deezyStreamEngine" class="deezy-stream-page">
+    <div style="width: 100%; padding: 20px 15px; background: #161616; text-align: center; border-bottom: 1px solid #252525; display: flex; align-items: center; justify-content: center; position: relative;">
+        <button onclick="document.getElementById('deezyStreamEngine').style.display='none'; document.getElementById('deezyCardWidget').style.display='block';" style="position: absolute; left: 15px; background: #2d3748; color: white; border: none; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; text-transform: uppercase;">&#10005; Back</button>
+        <div>
+            <h1 style="font-size: 1.4rem; margin: 0; color: #fff; font-weight: bold;">Spain vs Iraq</h1>
+            <p style="color: #10b981; font-weight: 600; font-size: 0.85rem; margin: 3px 0 0 0;">&#127942; International Friendly &#127942;</p>
+        </div>
+    </div>
+    <div style="color: #ef4444; font-weight: bold; margin: 20px 0; font-size: 1.1rem; text-align: center; letter-spacing: 1px;">&#128308; LIVE NOW &#128071;</div>
+
+    <div class="deezy-server-divider en">
+        <div class="div-line"></div>
+        <div class="div-label">&#127897;&#65039; English Commentary</div>
+        <div class="div-line"></div>
+    </div>
+    <div class="deezy-player-layer s-en">
+        <div class="deezy-srv-head">
+            <div class="srv-info">
+                <div class="srv-badge">EN</div>
+                <div><div class="srv-name">English Server</div><div class="srv-sub">HD &middot; Live Broadcast</div></div>
+            </div>
+            <button class="fs-btn" onclick="triggerLandscapeView('deezy-p1')">&#9974; Fullscreen</button>
+        </div>
+        <div id="deezy-p1" class="deezy-video-frame">
+            <iframe src="https://eyj0exaioijkv1qilcjhbgcioijiuzi1nij99ds.praynoldikem.sbs/playerv5.php?match=4712159&key=c0ae1abba6eebd7e6cc5b88b1d2B71547" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allowfullscreen scrolling="no"></iframe>
+        </div>
+    </div>
+
+    <div class="deezy-server-divider ar">
+        <div class="div-line"></div>
+        <div class="div-label">&#127897;&#65039; Arabic Commentary</div>
+        <div class="div-line"></div>
+    </div>
+    <div class="deezy-player-layer s-ar">
+        <div class="deezy-srv-head">
+            <div class="srv-info">
+                <div class="srv-badge">AR</div>
+                <div><div class="srv-name">Arabic Server</div><div class="srv-sub">HD &middot; Live Broadcast</div></div>
+            </div>
+            <button class="fs-btn" onclick="triggerLandscapeView('deezy-p2')">&#9974; Fullscreen</button>
+        </div>
+        <div id="deezy-p2" class="deezy-video-frame">
+            <iframe src="https://eyj0exaioijkv1qilcjhbgcioijiuzi1nij99ds.praynoldikem.sbs/playerv5.php?match=4712159&key=c0ae1abba6eebd7e6cc5b88b1d2B71547" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allowfullscreen scrolling="no"></iframe>
+        </div>
+    </div>
+
+    <div class="deezy-server-divider es">
+        <div class="div-line"></div>
+        <div class="div-label">&#127897;&#65039; Spanish Commentary</div>
+        <div class="div-line"></div>
+    </div>
+    <div class="deezy-player-layer s-es">
+        <div class="deezy-srv-head">
+            <div class="srv-info">
+                <div class="srv-badge">ES</div>
+                <div><div class="srv-name">Spanish Server</div><div class="srv-sub">HD &middot; Live Broadcast</div></div>
+            </div>
+            <button class="fs-btn" onclick="triggerLandscapeView('deezy-p3')">&#9974; Fullscreen</button>
+        </div>
+        <div id="deezy-p3" class="deezy-video-frame">
+            <iframe src="https://eyj0exaioijkv1qilcjhbgcioijiuzi1nij99ds.praynoldikem.sbs/playerv5.php?match=4712159&key=c0ae1abba6eebd7e6cc5b88b1d2B71547" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allowfullscreen scrolling="no"></iframe>
+        </div>
+    </div>
+</div>
+
+<script>
+function triggerLandscapeView(id) {
+    var el = document.getElementById(id);
+    if (el.requestFullscreen) { el.requestFullscreen().then(() => { lockScreen(); }); }
+    else if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen().then(() => { lockScreen(); }); }
+    else if (el.mozRequestFullScreen) { el.mozRequestFullScreen().then(() => { lockScreen(); }); }
+}
+function lockScreen() {
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(e => console.log(e));
+    }
+}
+</script>
+
+
+
+
+
+<style>
+    .deezy-card-view { display: block; width: 100%; max-width: 360px; margin: 20px auto; text-decoration: none; color: #fff; border-radius: 12px; background: #1e293b; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.5); font-family: sans-serif; text-align: center; cursor: pointer; border: 1px solid #334155; }
+    .deezy-stream-page { display: none; width: 100%; background: #0b0b0b; font-family: sans-serif; color: #fff; position: absolute; top: 0; left: 0; min-height: 100vh; z-index: 99999; padding-bottom: 40px; }
+    .deezy-player-layer { width: 100%; margin-bottom: 0; background: #000; }
+    .deezy-video-frame { position: relative; width: 100%; height: 410px !important; background: #000; }
+    .deezy-video-frame iframe { width: 100%; height: 100% !important; border: none; }
+    .deezy-server-divider { display: flex; align-items: center; margin: 0; }
+    .deezy-server-divider .div-line { flex: 1; height: 3px; }
+    .deezy-server-divider .div-label { padding: 10px 20px; font-size: 0.78rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+    .deezy-server-divider.en .div-line { background: linear-gradient(90deg, transparent, #ef4444, transparent); }
+    .deezy-server-divider.en .div-label { color: #ef4444; background: #0f0f0f; }
+    .deezy-server-divider.ar .div-line { background: linear-gradient(90deg, transparent, #eab308, transparent); }
+    .deezy-server-divider.ar .div-label { color: #eab308; background: #0f0f0f; }
+    .deezy-server-divider.es .div-line { background: linear-gradient(90deg, transparent, #60a5fa, transparent); }
+    .deezy-server-divider.es .div-label { color: #60a5fa; background: #0f0f0f; }
+    .deezy-srv-head { padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a1a1a; }
+    .deezy-srv-head .srv-info { display: flex; align-items: center; gap: 10px; }
+    .deezy-srv-head .srv-badge { width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 800; }
+    .deezy-srv-head .srv-name { font-size: 0.88rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #cbd5e1; }
+    .deezy-srv-head .srv-sub { font-size: 0.7rem; color: #4a5568; margin-top: 1px; }
+    .deezy-srv-head .fs-btn { background: transparent; padding: 6px 14px; border-radius: 5px; font-size: 0.72rem; font-weight: 800; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; transition: background 0.2s; }
+    .s-en .deezy-srv-head { background: #111; }
+    .s-en .srv-badge { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.35); }
+    .s-en .fs-btn { color: #ef4444; border: 1px solid rgba(239,68,68,0.4); }
+    .s-ar .deezy-srv-head { background: #111; }
+    .s-ar .srv-badge { background: rgba(234,179,8,0.12); color: #eab308; border: 1px solid rgba(234,179,8,0.35); }
+    .s-ar .fs-btn { color: #eab308; border: 1px solid rgba(234,179,8,0.4); }
+    .s-es .deezy-srv-head { background: #111; }
+    .s-es .srv-badge { background: rgba(96,165,250,0.12); color: #60a5fa; border: 1px solid rgba(96,165,250,0.35); }
+    .s-es .fs-btn { color: #60a5fa; border: 1px solid rgba(96,165,250,0.4); }
+</style>
+
+<div id="deezyCardWidget" class="deezy-card-view" onclick="document.getElementById('deezyCardWidget').style.display='none'; document.getElementById('deezyStreamEngine').style.display='block'; window.scrollTo(0,0);">
+    <img src="https://cdn.ratingbet.com/ratingbet/20260602/3817232242a003b3304101b3c8b0fb1001a15451ec72a7fc8ebe22cc1d0f6a0f-550-345.webp" alt="Spain vs Iraq" style="width: 100%; height: auto; display: block;">
+    <div style="padding: 18px; background: #1e293b;">
+        <h3 style="margin: 0 0 12px 0; font-size: 1.3rem; font-weight: 700; color: #fff;">Spain vs Iraq</h3>
+        <span style="display: inline-block; background: #ef4444; color: white; padding: 6px 16px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; letter-spacing: 0.5px;">WATCH LIVE</span>
+    </div>
+</div>
+
+<div id="deezyStreamEngine" class="deezy-stream-page">
+    <div style="width: 100%; padding: 20px 15px; background: #161616; text-align: center; border-bottom: 1px solid #252525; display: flex; align-items: center; justify-content: center; position: relative;">
+        <button onclick="document.getElementById('deezyStreamEngine').style.display='none'; document.getElementById('deezyCardWidget').style.display='block';" style="position: absolute; left: 15px; background: #2d3748; color: white; border: none; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; text-transform: uppercase;">&#10005; Back</button>
+        <div>
+            <h1 style="font-size: 1.4rem; margin: 0; color: #fff; font-weight: bold;">Spain vs Iraq</h1>
+            <p style="color: #10b981; font-weight: 600; font-size: 0.85rem; margin: 3px 0 0 0;">&#127942; International Friendly &#127942;</p>
+        </div>
+    </div>
+    <div style="color: #ef4444; font-weight: bold; margin: 20px 0; font-size: 1.1rem; text-align: center; letter-spacing: 1px;">&#128308; LIVE NOW &#128071;</div>
+
+    <div class="deezy-server-divider en">
+        <div class="div-line"></div>
+        <div class="div-label">&#127897;&#65039; English Commentary</div>
+        <div class="div-line"></div>
+    </div>
+    <div class="deezy-player-layer s-en">
+        <div class="deezy-srv-head">
+            <div class="srv-info">
+                <div class="srv-badge">EN</div>
+                <div><div class="srv-name">English Server</div><div class="srv-sub">HD &middot; Live Broadcast</div></div>
+            </div>
+            <button class="fs-btn" onclick="triggerLandscapeView('deezy-p1')">&#9974; Fullscreen</button>
+        </div>
+        <div id="deezy-p1" class="deezy-video-frame">
+            <iframe src="https://eyj0exaioijkv1qilcjhbgcioijiuzi1nij99ds.praynoldikem.sbs/playerv5.php?match=4712159&key=c0ae1abba6eebd7e6cc5b88b1d2B71547" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allowfullscreen scrolling="no"></iframe>
+        </div>
+    </div>
+
+    <div class="deezy-server-divider ar">
+        <div class="div-line"></div>
+        <div class="div-label">&#127897;&#65039; Arabic Commentary</div>
+        <div class="div-line"></div>
+    </div>
+    <div class="deezy-player-layer s-ar">
+        <div class="deezy-srv-head">
+            <div class="srv-info">
+                <div class="srv-badge">AR</div>
+                <div><div class="srv-name">Arabic Server</div><div class="srv-sub">HD &middot; Live Broadcast</div></div>
+            </div>
+            <button class="fs-btn" onclick="triggerLandscapeView('deezy-p2')">&#9974; Fullscreen</button>
+        </div>
+        <div id="deezy-p2" class="deezy-video-frame">
+            <iframe src="https://eyj0exaioijkv1qilcjhbgcioijiuzi1nij99ds.praynoldikem.sbs/playerv5.php?match=4712159&key=c0ae1abba6eebd7e6cc5b88b1d2B71547" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allowfullscreen scrolling="no"></iframe>
+        </div>
+    </div>
+
+    <div class="deezy-server-divider es">
+        <div class="div-line"></div>
+        <div class="div-label">&#127897;&#65039; Spanish Commentary</div>
+        <div class="div-line"></div>
+    </div>
+    <div class="deezy-player-layer s-es">
+        <div class="deezy-srv-head">
+            <div class="srv-info">
+                <div class="srv-badge">ES</div>
+                <div><div class="srv-name">Spanish Server</div><div class="srv-sub">HD &middot; Live Broadcast</div></div>
+            </div>
+            <button class="fs-btn" onclick="triggerLandscapeView('deezy-p3')">&#9974; Fullscreen</button>
+        </div>
+        <div id="deezy-p3" class="deezy-video-frame">
+            <iframe src="https://eyj0exaioijkv1qilcjhbgcioijiuzi1nij99ds.praynoldikem.sbs/playerv5.php?match=4712159&key=c0ae1abba6eebd7e6cc5b88b1d2B71547" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allowfullscreen scrolling="no"></iframe>
+        </div>
+    </div>
+</div>
+
+<script>
+function triggerLandscapeView(id) {
+    var el = document.getElementById(id);
+    if (el.requestFullscreen) { el.requestFullscreen().then(() => { lockScreen(); }); }
+    else if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen().then(() => { lockScreen(); }); }
+    else if (el.mozRequestFullScreen) { el.mozRequestFullScreen().then(() => { lockScreen(); }); }
+}
+function lockScreen() {
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(e => console.log(e));
+    }
+}
+</script>
+
+
+
+
+
+<style>
+    .deezy-card-view { display: block; width: 100%; max-width: 360px; margin: 20px auto; text-decoration: none; color: #fff; border-radius: 12px; background: #1e293b; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.5); font-family: sans-serif; text-align: center; cursor: pointer; border: 1px solid #334155; }
+    .deezy-stream-page { display: none; width: 100%; background: #0b0b0b; font-family: sans-serif; color: #fff; position: absolute; top: 0; left: 0; min-height: 100vh; z-index: 99999; padding-bottom: 40px; }
+    .deezy-player-layer { width: 100%; margin-bottom: 0; background: #000; }
+    .deezy-video-frame { position: relative; width: 100%; height: 410px !important; background: #000; }
+    .deezy-video-frame iframe { width: 100%; height: 100% !important; border: none; }
+    .deezy-server-divider { display: flex; align-items: center; margin: 0; }
+    .deezy-server-divider .div-line { flex: 1; height: 3px; }
+    .deezy-server-divider .div-label { padding: 10px 20px; font-size: 0.78rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+    .deezy-server-divider.en .div-line { background: linear-gradient(90deg, transparent, #ef4444, transparent); }
+    .deezy-server-divider.en .div-label { color: #ef4444; background: #0f0f0f; }
+    .deezy-server-divider.ar .div-line { background: linear-gradient(90deg, transparent, #eab308, transparent); }
+    .deezy-server-divider.ar .div-label { color: #eab308; background: #0f0f0f; }
+    .deezy-server-divider.es .div-line { background: linear-gradient(90deg, transparent, #60a5fa, transparent); }
+    .deezy-server-divider.es .div-label { color: #60a5fa; background: #0f0f0f; }
+    .deezy-srv-head { padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a1a1a; }
+    .deezy-srv-head .srv-info { display: flex; align-items: center; gap: 10px; }
+    .deezy-srv-head .srv-badge { width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 800; }
+    .deezy-srv-head .srv-name { font-size: 0.88rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #cbd5e1; }
+    .deezy-srv-head .srv-sub { font-size: 0.7rem; color: #4a5568; margin-top: 1px; }
+    .deezy-srv-head .fs-btn { background: transparent; padding: 6px 14px; border-radius: 5px; font-size: 0.72rem; font-weight: 800; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; transition: background 0.2s; }
+    .s-en .deezy-srv-head { background: #111; }
+    .s-en .srv-badge { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.35); }
+    .s-en .fs-btn { color: #ef4444; border: 1px solid rgba(239,68,68,0.4); }
+    .s-ar .deezy-srv-head { background: #111; }
+    .s-ar .srv-badge { background: rgba(234,179,8,0.12); color: #eab308; border: 1px solid rgba(234,179,8,0.35); }
+    .s-ar .fs-btn { color: #eab308; border: 1px solid rgba(234,179,8,0.4); }
+    .s-es .deezy-srv-head { background: #111; }
+    .s-es .srv-badge { background: rgba(96,165,250,0.12); color: #60a5fa; border: 1px solid rgba(96,165,250,0.35); }
+    .s-es .fs-btn { color: #60a5fa; border: 1px solid rgba(96,165,250,0.4); }
+</style>
+
+<div id="deezyCardWidget" class="deezy-card-view" onclick="document.getElementById('deezyCardWidget').style.display='none'; document.getElementById('deezyStreamEngine').style.display='block'; window.scrollTo(0,0);">
+    <img src="https://cdn.ratingbet.com/ratingbet/20260602/3817232242a003b3304101b3c8b0fb1001a15451ec72a7fc8ebe22cc1d0f6a0f-550-345.webp" alt="Spain vs Iraq" style="width: 100%; height: auto; display: block;">
+    <div style="padding: 18px; background: #1e293b;">
+        <h3 style="margin: 0 0 12px 0; font-size: 1.3rem; font-weight: 700; color: #fff;">Spain vs Iraq</h3>
+        <span style="display: inline-block; background: #ef4444; color: white; padding: 6px 16px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; letter-spacing: 0.5px;">WATCH LIVE</span>
+    </div>
+</div>
+
+<div id="deezyStreamEngine" class="deezy-stream-page">
+    <div style="width: 100%; padding: 20px 15px; background: #161616; text-align: center; border-bottom: 1px solid #252525; display: flex; align-items: center; justify-content: center; position: relative;">
+        <button onclick="document.getElementById('deezyStreamEngine').style.display='none'; document.getElementById('deezyCardWidget').style.display='block';" style="position: absolute; left: 15px; background: #2d3748; color: white; border: none; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem; text-transform: uppercase;">&#10005; Back</button>
+        <div>
+            <h1 style="font-size: 1.4rem; margin: 0; color: #fff; font-weight: bold;">Spain vs Iraq</h1>
+            <p style="color: #10b981; font-weight: 600; font-size: 0.85rem; margin: 3px 0 0 0;">&#127942; International Friendly &#127942;</p>
+        </div>
+    </div>
+    <div style="color: #ef4444; font-weight: bold; margin: 20px 0; font-size: 1.1rem; text-align: center; letter-spacing: 1px;">&#128308; LIVE NOW &#128071;</div>
+
+    <div class="deezy-server-divider en">
+        <div class="div-line"></div>
+        <div class="div-label">&#127897;&#65039; English Commentary</div>
+        <div class="div-line"></div>
+    </div>
+    <div class="deezy-player-layer s-en">
+        <div class="deezy-srv-head">
+            <div class="srv-info">
+                <div class="srv-badge">EN</div>
+                <div><div class="srv-name">English Server</div><div class="srv-sub">HD &middot; Live Broadcast</div></div>
+            </div>
+            <button class="fs-btn" onclick="triggerLandscapeView('deezy-p1')">&#9974; Fullscreen</button>
+        </div>
+        <div id="deezy-p1" class="deezy-video-frame">
+            <iframe src="https://eyj0exaioijkv1qilcjhbgcioijiuzi1nij99ds.praynoldikem.sbs/playerv5.php?match=4712159&key=c0ae1abba6eebd7e6cc5b88b1d2B71547" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allowfullscreen scrolling="no"></iframe>
+        </div>
+    </div>
+
+    <div class="deezy-server-divider ar">
+        <div class="div-line"></div>
+        <div class="div-label">&#127897;&#65039; Arabic Commentary</div>
+        <div class="div-line"></div>
+    </div>
+    <div class="deezy-player-layer s-ar">
+        <div class="deezy-srv-head">
+            <div class="srv-info">
+                <div class="srv-badge">AR</div>
+                <div><div class="srv-name">Arabic Server</div><div class="srv-sub">HD &middot; Live Broadcast</div></div>
+            </div>
+            <button class="fs-btn" onclick="triggerLandscapeView('deezy-p2')">&#9974; Fullscreen</button>
+        </div>
+        <div id="deezy-p2" class="deezy-video-frame">
+            <iframe src="https://eyj0exaioijkv1qilcjhbgcioijiuzi1nij99ds.praynoldikem.sbs/playerv5.php?match=4712159&key=c0ae1abba6eebd7e6cc5b88b1d2B71547" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allowfullscreen scrolling="no"></iframe>
+        </div>
+    </div>
+
+    <div class="deezy-server-divider es">
+        <div class="div-line"></div>
+        <div class="div-label">&#127897;&#65039; Spanish Commentary</div>
+        <div class="div-line"></div>
+    </div>
+    <div class="deezy-player-layer s-es">
+        <div class="deezy-srv-head">
+            <div class="srv-info">
+                <div class="srv-badge">ES</div>
+                <div><div class="srv-name">Spanish Server</div><div class="srv-sub">HD &middot; Live Broadcast</div></div>
+            </div>
+            <button class="fs-btn" onclick="triggerLandscapeView('deezy-p3')">&#9974; Fullscreen</button>
+        </div>
+        <div id="deezy-p3" class="deezy-video-frame">
+            <iframe src="https://eyj0exaioijkv1qilcjhbgcioijiuzi1nij99ds.praynoldikem.sbs/playerv5.php?match=4712159&key=c0ae1abba6eebd7e6cc5b88b1d2B71547" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allowfullscreen scrolling="no"></iframe>
+        </div>
+    </div>
+</div>
+
+<script>
+function triggerLandscapeView(id) {
+    var el = document.getElementById(id);
+    if (el.requestFullscreen) { el.requestFullscreen().then(() => { lockScreen(); }); }
+    else if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen().then(() => { lockScreen(); }); }
+    else if (el.mozRequestFullScreen) { el.mozRequestFullScreen().then(() => { lockScreen(); }); }
+}
+function lockScreen() {
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(e => console.log(e));
+    }
+}
+</script>
+
+
+
+
+
+
